@@ -1,4 +1,0 @@
-# file: /home/pligocki/Downloads/workshop/VISUALSTUDIOCODE/PLI/RACECALC/app/cli.py
-# hypothesis_version: 6.151.9
-
-['--distance', '--target', '--time', 'Race calculator CLI', '__main__', 'command', 'pace', 'predict']
