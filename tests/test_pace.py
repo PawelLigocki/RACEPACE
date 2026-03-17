@@ -1,6 +1,17 @@
 import pytest
-from app.pace import pace_from_time, time_from_pace
+from app.pace import pace_from_time, time_from_pace, pace_km_to_mile, negative_split
+from hypothesis import given, strategies as st
 
+@given(
+    distance=st.floats(min_value=0.1, max_value=100),
+    time=st.floats(min_value=0.1, max_value=1000),
+)
+def test_pace_is_always_positive(distance, time):
+    from app.pace import pace_from_time
+
+    pace = pace_from_time(distance, time)
+
+    assert pace > 0
 
 def test_pace_calculation():
     pace = pace_from_time(10, 50)
@@ -27,3 +38,22 @@ def test_multiple_pace_cases(distance, time, expected):
 def test_zero_distance():
     with pytest.raises(ValueError):
         pace_from_time(0, 50)
+
+def test_negative_distance():
+    with pytest.raises(ValueError):
+        pace_from_time(-10, 50)
+
+
+def test_zero_time():
+    result = pace_from_time(10, 0)
+    assert result == 0
+
+def test_km_to_mile():
+    assert round(pace_km_to_mile(5), 2) == 8.05
+
+
+def test_negative_split():
+    first, second = negative_split(100)
+
+    assert first > second
+    assert round(first + second) == 100

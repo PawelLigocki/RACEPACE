@@ -13,6 +13,11 @@ def test_same_distance():
 
     assert round(result, 2) == 50
 
+def test_half_marathon_prediction_realistic():
+    result = riegel_predict(10, 50, 21.1)
+
+    assert result > 100
+    assert result < 130
 
 @pytest.mark.parametrize(
     "d1,t1,d2",

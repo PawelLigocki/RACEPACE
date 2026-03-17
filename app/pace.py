@@ -7,6 +7,16 @@ def pace_from_time(distance_km: float, time_minutes: float) -> float:
 
     return time_minutes / distance_km
 
+def pace_km_to_mile(pace_min_per_km: float) -> float:
+    return pace_min_per_km * 1.60934
+
+def negative_split(total_time: float):
+    first_half = total_time * 0.51
+    second_half = total_time * 0.49
+    return first_half, second_half
+
+def pace_for_distance(distance_km: float, total_time: float):
+    return total_time / distance_km
 
 def time_from_pace(distance_km: float, pace_min_per_km: float) -> float:
     """
