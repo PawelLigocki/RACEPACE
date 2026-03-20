@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RaceCalc</title>
+</head>
+<body>
+
+<h1>Race Calculator</h1>
+
+<h2>Pace</h2>
+<form action="/pace-ui" method="get">
+    Distance (km): <input type="number" step="0.1" name="distance"><br>
+    Time (min): <input type="number" step="0.1" name="time"><br>
+    <button type="submit">Calculate Pace</button>
+</form>
+
+<h2>Predict</h2>
+<form action="/predict-ui" method="get">
+    Distance: <input type="number" step="0.1" name="distance"><br>
+    Time: <input type="number" step="0.1" name="time"><br>
+    Target distance: <input type="number" step="0.1" name="target"><br>
+    <button type="submit">Predict</button>
+</form>
+
+<h2>Result:</h2>
+<p>{{ result }}</p>
+
+</body>
+</html>

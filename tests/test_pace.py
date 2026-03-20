@@ -43,10 +43,9 @@ def test_negative_distance():
     with pytest.raises(ValueError):
         pace_from_time(-10, 50)
 
-
 def test_zero_time():
-    result = pace_from_time(10, 0)
-    assert result == 0
+    with pytest.raises(ValueError):
+        pace_from_time(10, 0)
 
 def test_km_to_mile():
     assert round(pace_km_to_mile(5), 2) == 8.05
