@@ -4,6 +4,9 @@ from app.predictor import riegel_predict
 from fastapi import HTTPException
 from fastapi.templating import Jinja2Templates
 from fastapi.requests import Request
+from fastapi.responses import JSONResponse
+from fastapi.responses import HTMLResponse
+
 
 templates = Jinja2Templates(directory="templates")
 
@@ -17,14 +20,10 @@ def read_root():
 
 
 @app.get("/pace")
-def get_pace(distance: float, time: float):
+def pace_api(distance: float, time: float):
     if distance <= 0:
-        raise HTTPException(status_code=400, detail="Distance must be > 0")
-
-    if time <= 0:
-        raise HTTPException(status_code=400, detail="Time must be > 0")
-
-    pace = pace_from_time(distance, time)
+        raise HTTPException(status_code=400, detail="Distance must be greater than zero")
+    pace = time / distance
     return {"pace": pace}
 
 @app.get("/predict")
@@ -37,29 +36,34 @@ def predict(distance: float, time: float, target: float):
 
 @app.get("/ui")
 def ui(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request, "index.html", {})
+
+from fastapi.responses import JSONResponse, HTMLResponse
 
 @app.get("/pace-ui")
-def pace_ui(request: Request, distance: float, time: float):
-    pace = pace_from_time(distance, time)
+def pace_ui(request: Request, distance: float = None, time: float = None):
+    if distance is not None and time is not None:
+        pace = time / distance
+        content = f"""
+        <html>
+            <body>
+                <h1>Pace</h1>
+                <p>Pace: {pace}</p>
+            </body>
+        </html>
+        """
+        return HTMLResponse(content=content)
 
-    return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request,
-            "result": f"Pace: {pace:.2f} min/km"
-        },
-    )
-
+    return templates.TemplateResponse(request, "index.html", {})
 
 @app.get("/predict-ui")
 def predict_ui(request: Request, distance: float, time: float, target: float):
     result = riegel_predict(distance, time, target)
 
     return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request,
-            "result": f"Predicted time: {result:.2f} min"
-        },
-    )
+    request,
+    "index.html",
+    {
+        "result": f"Predicted time: {result:.2f} min"
+    },
+)

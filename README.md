@@ -14,6 +14,7 @@ Application for runners to calculate pace and predict race times.
 - Python
 - pytest
 - hypothesis
+- jinja2
 
 ## Run project
 
@@ -23,4 +24,4 @@ pip install -r requirements.txt
 
 Run tests:
 
-pytest --cov=app
+python -m pytest -v

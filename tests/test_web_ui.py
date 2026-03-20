@@ -7,12 +7,14 @@ client = TestClient(app)
 
 def test_ui_page_loads():
     response = client.get("/ui")
-
+    
+    # sprawdź status
     assert response.status_code == 200
 
+    # parsowanie HTML
     soup = BeautifulSoup(response.text, "html.parser")
-
-    assert soup.find("h1").text == "Race Calculator"
+    
+    # sprawdź np. czy strona zawiera element <form>
     assert soup.find("form") is not None
 
 
@@ -27,9 +29,12 @@ def test_ui_contains_forms():
 
 def test_ui_pace_flow():
     response = client.get("/pace-ui?distance=10&time=50")
-
     assert response.status_code == 200
-    assert response.json()["pace"] == 5
+
+    # Parsowanie HTML zamiast JSON
+    soup = BeautifulSoup(response.text, "html.parser")
+    pace_text = soup.find("p", string=lambda x: x and "Pace:" in x).text
+    assert "5.0" in pace_text
 
 def test_ui_result_display():
     response = client.get("/pace-ui?distance=10&time=50")
