@@ -40,10 +40,11 @@ templates = Jinja2Templates(directory="templates")
 @app.get("/ui")
 async def ui(request: Request):
     some_safe_data = {"example": 123}  # jeśli potrzebujesz
+    
     return templates.TemplateResponse(
-        name="ui.html",
-        context={"request": request, "distance_options": ["5","10","21","42"], "other_data": some_safe_data}
-    )
+    "ui.html",
+    {"request": request, "distance_options": ["5","10","21","42"], "other_data": some_safe_data}
+)
 
 @app.get("/pace-ui")
 def pace_ui(request: Request,
@@ -60,9 +61,9 @@ def pace_ui(request: Request,
     pace_str = minutes_to_time_str(pace)
 
     return templates.TemplateResponse(
-        "pace.html",
-        context={"request": request, "result": pace_str}
-    )
+    "pace.html",
+    {"request": request, "result": pace_str}
+)
 
 @app.get("/predict-ui")
 def predict_ui(request: Request,
@@ -82,10 +83,10 @@ def predict_ui(request: Request,
 
     return templates.TemplateResponse(
     "index.html",
-    context={
+    {
         "request": request,
         "result": f"Predicted time: {result_str}"
-    },
+    }
 )
 
 def resolve_distance(choice, custom):
