@@ -24,6 +24,8 @@ def read_root():
 def pace_api(distance: float, time: float):
     if distance <= 0:
         raise HTTPException(status_code=400, detail="Distance must be greater than zero")
+    if time <= 0:  # ← DODAJ TĘ LINIĘ
+        raise HTTPException(status_code=400, detail="Time must be greater than zero")
     pace = time / distance
     return {"pace": pace}
 
@@ -49,16 +51,15 @@ async def ui(request: Request):
 
 @app.get("/pace-ui")
 def pace_ui(request: Request,
-            distance_choice: str,
-            custom_distance: float = 0,
-            hours: int = 0,
-            minutes: int = 0,
-            seconds: int = 0):
-
-    distance = resolve_distance(distance_choice, custom_distance)
-    total_time = time_to_minutes(hours, minutes, seconds)
-
-    pace = pace_from_time(distance, total_time)
+            distance: float,
+            time: float):
+    
+    if distance <= 0:
+        raise HTTPException(status_code=400, detail="Distance must be greater than zero")
+    if time <= 0:
+        raise HTTPException(status_code=400, detail="Time must be greater than zero")
+    
+    pace = pace_from_time(distance, time)
     pace_str = minutes_to_time_str(pace)
 
     return templates.TemplateResponse(
