@@ -1,6 +1,7 @@
 from playwright.sync_api import sync_playwright
 from fastapi.testclient import TestClient
 from app.api import app  # <- Twoja instancja FastAPI
+import pytest
 
 client = TestClient(app)  # działa w pamięci, bez Uvicorn
 
