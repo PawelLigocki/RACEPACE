@@ -51,22 +51,26 @@ async def ui(request: Request):
 
 @app.get("/pace-ui")
 def pace_ui(request: Request,
-            distance: float,
-            time: float):
+            distance_choice: str = "",
+            custom_distance: float = 0,
+            hours: int = 0,
+            minutes: int = 0,
+            seconds: int = 0):
     
-    if distance <= 0:
-        raise HTTPException(status_code=400, detail="Distance must be greater than zero")
-    if time <= 0:
-        raise HTTPException(status_code=400, detail="Time must be greater than zero")
+    distance = resolve_distance(distance_choice, custom_distance)
+    total_time = time_to_minutes(hours, minutes, seconds)
     
-    pace = pace_from_time(distance, time)
+    if distance <= 0 or total_time <= 0:
+        raise HTTPException(status_code=400, detail="Invalid distance or time")
+    
+    pace = pace_from_time(distance, total_time)
     pace_str = minutes_to_time_str(pace)
-
+    
     return templates.TemplateResponse(
-    request,  # ← PIERWSZY ARGUMENT
-    "pace.html",
-    {"result": pace_str}
-)
+        request,
+        "pace.html",
+        {"result": pace_str}
+    )
 
 @app.get("/predict-ui")
 def predict_ui(request: Request,
