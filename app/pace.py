@@ -23,6 +23,19 @@ def required_pace(distance_km: float, target_time_minutes: float) -> float:
         raise ValueError("Distance and target time must be greater than zero")
     return target_time_minutes / distance_km
 
+def time_to_minutes(hours: int, minutes: int, seconds: int) -> float:
+    return hours * 60 + minutes + seconds / 60
+
+
+def minutes_to_time_str(total_minutes: float) -> str:
+    total_seconds = int(total_minutes * 60)
+
+    h = total_seconds // 3600
+    m = (total_seconds % 3600) // 60
+    s = total_seconds % 60
+
+    return f"{h:02d}:{m:02d}:{s:02d}"
+
 
 # def pace_from_time(distance_km: float, time_minutes: float) -> float:
 #     """

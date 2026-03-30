@@ -16,8 +16,13 @@ jobs:
 
       - name: Install deps
         run: |
-          pip install pytest pytest-cov hypothesis fastapi uvicorn httpx
+          pip install pytest pytest-cov hypothesis fastapi uvicorn httpx jinja2
 
+      - name: Install Playwright
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps
+          
       - name: Run tests
         run: |
           pytest --cov=app

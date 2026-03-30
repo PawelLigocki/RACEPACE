@@ -41,3 +41,9 @@ def test_ui_result_display():
 
     assert response.status_code == 200
     assert "Pace" in response.text
+
+def test_ui_time_format():
+    response = client.get("/pace-ui?distance_choice=10&hours=0&minutes=50&seconds=0")
+
+    assert response.status_code == 200
+    assert ":" in response.text

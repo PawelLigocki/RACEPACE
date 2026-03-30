@@ -1,6 +1,8 @@
 import pytest
 from app.pace import pace_from_time, time_from_pace, pace_km_to_mile, negative_split
 from hypothesis import given, strategies as st
+from app.pace import time_to_minutes, minutes_to_time_str
+
 
 @given(
     distance=st.floats(min_value=0.1, max_value=100),
@@ -56,3 +58,13 @@ def test_negative_split():
 
     assert first > second
     assert round(first + second) == 100
+
+
+def test_time_conversion():
+    minutes = time_to_minutes(1, 0, 0)
+    assert minutes == 60
+
+
+def test_time_format():
+    result = minutes_to_time_str(125)
+    assert result == "02:05:00"

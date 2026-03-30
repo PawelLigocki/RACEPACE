@@ -6,6 +6,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.requests import Request
 from fastapi.responses import JSONResponse
 from fastapi.responses import HTMLResponse
+from app.pace import time_to_minutes, minutes_to_time_str
 
 
 templates = Jinja2Templates(directory="templates")
@@ -41,29 +42,53 @@ def ui(request: Request):
 from fastapi.responses import JSONResponse, HTMLResponse
 
 @app.get("/pace-ui")
-def pace_ui(request: Request, distance: float = None, time: float = None):
-    if distance is not None and time is not None:
-        pace = time / distance
-        content = f"""
-        <html>
-            <body>
-                <h1>Pace</h1>
-                <p>Pace: {pace}</p>
-            </body>
-        </html>
-        """
-        return HTMLResponse(content=content)
+def pace_ui(request: Request,
+            distance_choice: str,
+            custom_distance: float = 0,
+            hours: int = 0,
+            minutes: int = 0,
+            seconds: int = 0):
 
-    return templates.TemplateResponse(request, "index.html", {})
+    distance = resolve_distance(distance_choice, custom_distance)
+    total_time = time_to_minutes(hours, minutes, seconds)
 
-@app.get("/predict-ui")
-def predict_ui(request: Request, distance: float, time: float, target: float):
-    result = riegel_predict(distance, time, target)
+    pace = pace_from_time(distance, total_time)
+
+    pace_str = minutes_to_time_str(pace)
 
     return templates.TemplateResponse(
-    request,
-    "index.html",
-    {
-        "result": f"Predicted time: {result:.2f} min"
-    },
-)
+        "index.html",
+        {
+            "request": request,
+            "result": f"Pace: {pace_str} min/km"
+        },
+    )
+
+@app.get("/predict-ui")
+def predict_ui(request: Request,
+               distance_choice: str,
+               custom_distance: float = 0,
+               target: float = 10,
+               hours: int = 0,
+               minutes: int = 0,
+               seconds: int = 0):
+
+    distance = resolve_distance(distance_choice, custom_distance)
+    total_time = time_to_minutes(hours, minutes, seconds)
+
+    result = riegel_predict(distance, total_time, target)
+
+    result_str = minutes_to_time_str(result)
+
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "result": f"Predicted time: {result_str}"
+        },
+    )
+
+def resolve_distance(choice, custom):
+    if choice == "custom":
+        return float(custom)
+    return float(choice)
