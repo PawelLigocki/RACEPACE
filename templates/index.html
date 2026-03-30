@@ -46,23 +46,12 @@
 
 <h2>Pace</h2>
 <form action="/pace-ui" method="get">
-
     <label>Distance:</label>
-    <select name="pace_distance_choice">
-        <option value="5">5 km</option>
-        <option value="10">10 km</option>
-        <option value="21.1">Half Marathon</option>
-        <option value="42.2">Marathon</option>
-        <option value="custom">Custom</option>
-    </select>
-
-    <input type="number" step="0.1" name="pace_custom_distance" placeholder="Custom distance (km)">
-
-    <label>Time:</label>
-    <input type="number" name="pace_hours" placeholder="Hours">
-    <input type="number" name="pace_minutes" placeholder="Minutes">
-    <input type="number" name="pace_seconds" placeholder="Seconds">
-
+    <input type="number" step="0.1" name="distance" placeholder="Distance (km)">
+    
+    <label>Time (minutes):</label>
+    <input type="number" name="time" placeholder="Time in minutes">
+    
     <button type="submit">Calculate Pace</button>
 </form>
 
