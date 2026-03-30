@@ -1,6 +1,8 @@
 from fastapi.testclient import TestClient
 from app.api import app
 from bs4 import BeautifulSoup
+from fastapi.templating import Jinja2Templates
+from fastapi import Request
 
 client = TestClient(app)
 

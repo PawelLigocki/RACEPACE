@@ -8,7 +8,6 @@ from fastapi.responses import JSONResponse
 from fastapi.responses import HTMLResponse
 from app.pace import time_to_minutes, minutes_to_time_str
 
-
 templates = Jinja2Templates(directory="templates")
 
 
@@ -35,13 +34,16 @@ def predict(distance: float, time: float, target: float):
     result = riegel_predict(distance, time, target)
     return {"predicted_time": result}
 
-@app.get("/ui")
-def ui(request: Request):
-    return templates.TemplateResponse(
-        "index.html",
-        {"request": request}  # koniecznie klucz "request"
-    )
+templates = Jinja2Templates(directory="templates")
 
+@app.get("/ui")
+async def ui(request: Request):
+    context = {
+        "request": request,
+        "distance_options": ["5", "10", "21", "42"],  # przykład
+        "other_data": some_safe_data  # upewnij się, że nie zawiera dict z dict
+    }
+    return templates.TemplateResponse("ui.html", context)
 @app.get("/pace-ui")
 def pace_ui(request: Request,
             distance_choice: str,
