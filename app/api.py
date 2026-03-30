@@ -49,13 +49,18 @@ async def ui(request: Request):
     {"distance_options": ["5","10","21","42"], "other_data": some_safe_data}
 )
 
+from typing import Optional
+
 @app.get("/pace-ui")
 def pace_ui(request: Request,
             distance_choice: str = "",
-            custom_distance: float = 0,
+            pace_custom_distance: Optional[float] = None,  # ← ZMIEŃ tutaj
             hours: int = 0,
             minutes: int = 0,
             seconds: int = 0):
+    
+    # Jeśli pace_custom_distance jest None, ustaw na 0
+    custom_distance = pace_custom_distance if pace_custom_distance is not None else 0
     
     distance = resolve_distance(distance_choice, custom_distance)
     total_time = time_to_minutes(hours, minutes, seconds)
@@ -72,27 +77,33 @@ def pace_ui(request: Request,
         {"result": pace_str}
     )
 
+from app.predictor import riegel_predict  # ← Dodaj import
+
 @app.get("/predict-ui")
 def predict_ui(request: Request,
-               distance_choice: str,
-               custom_distance: float = 0,
-               target: float = 10,
+               distance_choice: str = "",
+               predict_custom_distance: Optional[float] = None,
+               target: float = 0,
                hours: int = 0,
                minutes: int = 0,
                seconds: int = 0):
-
+    
+    custom_distance = predict_custom_distance if predict_custom_distance is not None else 0
+    
     distance = resolve_distance(distance_choice, custom_distance)
     total_time = time_to_minutes(hours, minutes, seconds)
-
-    result = riegel_predict(distance, total_time, target)
-
-    result_str = minutes_to_time_str(result)
-
+    
+    if distance <= 0 or total_time <= 0 or target <= 0:
+        raise HTTPException(status_code=400, detail="Invalid distance or time")
+    
+    predicted_time = riegel_predict(distance, total_time, target)
+    predicted_str = minutes_to_time_str(predicted_time)
+    
     return templates.TemplateResponse(
-    request,  # ← PIERWSZY ARGUMENT
-    "index.html",
-    {"result": f"Predicted time: {result_str}"}
-)
+        request,
+        "predict.html",  # ← ZMIEŃ z index.html na predict.html
+        {"result": predicted_str}
+    )
 
 def resolve_distance(choice, custom):
     if choice == "custom":

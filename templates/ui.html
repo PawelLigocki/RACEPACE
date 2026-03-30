@@ -5,33 +5,97 @@
     <style>
         body {
             font-family: Arial;
-            max-width: 600px;
+            max-width: 800px;
             margin: auto;
             padding: 20px;
         }
+
         h1 { text-align: center; }
+
+        h2 { margin-top: 30px; border-bottom: 2px solid #007BFF; padding-bottom: 10px; }
+
+        .form-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-section {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .form-section h3 {
+            margin-top: 0;
+            color: #007BFF;
+        }
+
         form {
             border: 1px solid #ddd;
             padding: 15px;
             margin-bottom: 20px;
             border-radius: 10px;
         }
+
         input, select, button {
             margin: 5px 0;
             padding: 8px;
             width: 100%;
+            box-sizing: border-box;
         }
+
         button {
             background-color: #007BFF;
             color: white;
             border: none;
             cursor: pointer;
+            font-weight: bold;
         }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
         .result {
-            background: #f0f0f0;
-            padding: 10px;
+            background: #d4edda;
+            border: 2px solid #28a745;
+            padding: 15px;
             border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .result h3 {
+            color: #28a745;
+            margin-top: 0;
+        }
+
+        .result p {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .custom-distance-input {
+            display: none;
+        }
+
+        .custom-distance-input.show {
+            display: block;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
             margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 3px;
         }
     </style>
 </head>
@@ -39,62 +103,186 @@
 
 <h1>🏃 Race Calculator</h1>
 
-<h2>Pace</h2>
-<form action="/pace-ui" method="get">
-    <label>Distance (km):</label>
-    <select name="distance_choice">
+<h2>📊 Pace Calculator</h2>
+<form action="/pace-ui" method="get" onsubmit="handlePaceSubmit(event)">
+    <label>Distance:</label>
+    <select name="distance_choice" id="paceDistance" onchange="handlePaceDistanceChange()">
+        <option value="">-- Select distance --</option>
         <option value="5">5 km</option>
         <option value="10">10 km</option>
-        <option value="21.1">Half Marathon</option>
-        <option value="42.2">Marathon</option>
+        <option value="21.1">Half Marathon (21.1 km)</option>
+        <option value="42.195">Marathon (42.195 km)</option>
         <option value="custom">Custom</option>
     </select>
 
-    <input type="number" step="0.1" name="custom_distance" placeholder="Custom distance (km)">
-
+    <input 
+        type="number" 
+        step="0.1" 
+        id="paceCustomDistance"
+        placeholder="Custom distance (km)"
+        class="custom-distance-input"
+    >
+    
     <label>Time:</label>
-    <input type="number" name="hours" placeholder="Hours">
-    <input type="number" name="minutes" placeholder="Minutes">
-    <input type="number" name="seconds" placeholder="Seconds">
-
-    <button type="submit">Calculate Pace</button>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+        <div>
+            <input type="number" name="hours" placeholder="Hours" value="0" min="0">
+            <div class="info-text">Hours</div>
+        </div>
+        <div>
+            <input type="number" name="minutes" placeholder="Minutes" value="0" min="0" max="59">
+            <div class="info-text">Minutes</div>
+        </div>
+        <div>
+            <input type="number" name="seconds" placeholder="Seconds" value="0" min="0" max="59">
+            <div class="info-text">Seconds</div>
+        </div>
+    </div>
+    
+    <button type="submit" style="margin-top: 15px;">📈 Calculate Pace</button>
 </form>
 
-<h2>Predict</h2>
-<form action="/predict-ui" method="get">
-    <label>Distance (km):</label>
-    <select name="distance_choice">
-        <option value="5">5 km</option>
-        <option value="10">10 km</option>
-        <option value="21.1">Half Marathon</option>
-        <option value="42.2">Marathon</option>
-        <option value="custom">Custom</option>
-    </select>
+<h2>🎯 Predict Time</h2>
 
-    <input type="number" step="0.1" name="custom_distance" placeholder="Custom distance (km)">
+<div class="form-container">
+    <!-- Lewa kolumna: Dystans wyjściowy + Czas -->
+    <div class="form-section">
+        <h3>Your Current Performance</h3>
+        <form id="predictForm" action="/predict-ui" method="get" onsubmit="handlePredictSubmit(event)">
+            
+            <label>Current Distance Ran:</label>
+            <select name="distance_choice" id="predictDistance" onchange="handlePredictDistanceChange()">
+                <option value="">-- Select distance --</option>
+                <option value="5">5 km</option>
+                <option value="10">10 km</option>
+                <option value="21.1">Half Marathon (21.1 km)</option>
+                <option value="42.195">Marathon (42.195 km)</option>
+                <option value="custom">Custom</option>
+            </select>
 
-    <label>Target distance:</label>
-    <select name="target">
-        <option value="5">5 km</option>
-        <option value="10">10 km</option>
-        <option value="21.1">Half Marathon</option>
-        <option value="42.2">Marathon</option>
-    </select>
+            <input 
+                type="number" 
+                step="0.1" 
+                id="predictCustomDistance"
+                placeholder="Custom distance (km)"
+                class="custom-distance-input"
+            >
 
-    <label>Time:</label>
-    <input type="number" name="hours" placeholder="Hours">
-    <input type="number" name="minutes" placeholder="Minutes">
-    <input type="number" name="seconds" placeholder="Seconds">
+            <label>Time Taken:</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                <div>
+                    <input type="number" name="hours" placeholder="Hours" value="0" min="0">
+                    <div class="info-text">Hours</div>
+                </div>
+                <div>
+                    <input type="number" name="minutes" placeholder="Minutes" value="0" min="0" max="59">
+                    <div class="info-text">Minutes</div>
+                </div>
+                <div>
+                    <input type="number" name="seconds" placeholder="Seconds" value="0" min="0" max="59">
+                    <div class="info-text">Seconds</div>
+                </div>
+            </div>
 
-    <button type="submit">Predict</button>
-</form>
+        </form>
+    </div>
+
+    <!-- Prawa kolumna: Cel dystansu -->
+    <div class="form-section">
+        <h3>Your Target Goal</h3>
+        <form id="predictTargetForm">
+            
+            <label>Target Distance:</label>
+            <select name="target" id="predictTarget">
+                <option value="">-- Select target --</option>
+                <option value="5">5 km</option>
+                <option value="10">10 km</option>
+                <option value="21.1">Half Marathon (21.1 km)</option>
+                <option value="42.195">Marathon (42.195 km)</option>
+            </select>
+
+            <p style="margin-top: 20px; padding: 10px; background: #f0f0f0; border-radius: 5px;">
+                <strong>Estimated Time:</strong><br>
+                <span id="predictedTimeDisplay" style="font-size: 20px; color: #007BFF;">--:--:--</span>
+            </p>
+
+            <button type="button" onclick="submitPredictForm()" style="margin-top: 15px;">✅ Get Prediction</button>
+
+        </form>
+    </div>
+</div>
 
 {% if result %}
 <div class="result">
-    <h3>Result:</h3>
+    <h3>🎉 Result:</h3>
     <p>{{ result }}</p>
 </div>
 {% endif %}
+
+<script>
+function handlePaceDistanceChange() {
+    const select = document.getElementById('paceDistance');
+    const customInput = document.getElementById('paceCustomDistance');
+    
+    if (select.value === 'custom') {
+        customInput.classList.add('show');
+    } else {
+        customInput.classList.remove('show');
+    }
+}
+
+function handlePredictDistanceChange() {
+    const select = document.getElementById('predictDistance');
+    const customInput = document.getElementById('predictCustomDistance');
+    
+    if (select.value === 'custom') {
+        customInput.classList.add('show');
+    } else {
+        customInput.classList.remove('show');
+    }
+}
+
+function handlePaceSubmit(event) {
+    const select = document.getElementById('paceDistance');
+    const customInput = document.getElementById('paceCustomDistance');
+    
+    if (select.value === 'custom') {
+        customInput.name = 'pace_custom_distance';
+    } else {
+        customInput.name = '';
+    }
+}
+
+function handlePredictSubmit(event) {
+    event.preventDefault();
+    
+    const select = document.getElementById('predictDistance');
+    const customInput = document.getElementById('predictCustomDistance');
+    
+    if (select.value === 'custom') {
+        customInput.name = 'predict_custom_distance';
+    } else {
+        customInput.name = '';
+    }
+    
+    // Prześlij formularz
+    document.getElementById('predictForm').submit();
+}
+
+function submitPredictForm() {
+    // Dodaj target do głównego formularza
+    const targetSelect = document.getElementById('predictTarget');
+    const targetInput = document.createElement('input');
+    targetInput.type = 'hidden';
+    targetInput.name = 'target';
+    targetInput.value = targetSelect.value;
+    
+    const predictForm = document.getElementById('predictForm');
+    predictForm.appendChild(targetInput);
+    
+    handlePredictSubmit({preventDefault: () => {}});
+}
+</script>
 
 </body>
 </html>

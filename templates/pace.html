@@ -1,15 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pace Result</title>
+    <style>
+        body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; }
+        .result { background: #f0f0f0; padding: 15px; border-radius: 8px; margin-top: 20px; }
+        h1 { text-align: center; }
+    </style>
 </head>
 <body>
-    <h1>Pace Result</h1>
-    <div>
-        <h2>Results</h2>
-        <p>Your pace result will be displayed here.</p>
-    </div>
+<h1>Pace Result</h1>
+
+{% if result %}
+<div class="result">
+    <h3>Your Pace:</h3>
+    <p>{{ result }}</p>
+</div>
+{% endif %}
+
+<a href="/ui">← Back to Calculator</a>
 </body>
 </html>

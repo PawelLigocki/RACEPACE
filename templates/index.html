@@ -47,10 +47,20 @@
 <h2>Pace</h2>
 <form action="/pace-ui" method="get">
     <label>Distance:</label>
-    <input type="number" step="0.1" name="distance" placeholder="Distance (km)">
+    <select name="distance_choice">
+        <option value="5">5 km</option>
+        <option value="10">10 km</option>
+        <option value="21.1">Half Marathon</option>
+        <option value="42.2">Marathon</option>
+        <option value="custom">Custom</option>
+    </select>
+
+    <input type="number" step="0.1" name="custom_distance" placeholder="Custom distance (km)">
     
-    <label>Time (minutes):</label>
-    <input type="number" name="time" placeholder="Time in minutes">
+    <label>Time:</label>
+    <input type="number" name="hours" placeholder="Hours">
+    <input type="number" name="minutes" placeholder="Minutes">
+    <input type="number" name="seconds" placeholder="Seconds">
     
     <button type="submit">Calculate Pace</button>
 </form>
@@ -59,7 +69,7 @@
 <form action="/predict-ui" method="get">
 
     <label>Distance:</label>
-    <select name="predict_distance_choice">
+    <select name="distance_choice">
         <option value="5">5 km</option>
         <option value="10">10 km</option>
         <option value="21.1">Half Marathon</option>
@@ -67,10 +77,10 @@
         <option value="custom">Custom</option>
     </select>
 
-    <input type="number" step="0.1" name="predict_custom_distance" placeholder="Custom distance (km)">
+    <input type="number" step="0.1" name="custom_distance" placeholder="Custom distance (km)">
 
     <label>Target distance:</label>
-    <select name="predict_target">
+    <select name="target">
         <option value="5">5 km</option>
         <option value="10">10 km</option>
         <option value="21.1">Half Marathon</option>
@@ -78,9 +88,9 @@
     </select>
 
     <label>Time:</label>
-    <input type="number" name="predict_hours" placeholder="Hours">
-    <input type="number" name="predict_minutes" placeholder="Minutes">
-    <input type="number" name="predict_seconds" placeholder="Seconds">
+    <input type="number" name="hours" placeholder="Hours">
+    <input type="number" name="minutes" placeholder="Minutes">
+    <input type="number" name="seconds" placeholder="Seconds">
 
     <button type="submit">Predict</button>
 </form>

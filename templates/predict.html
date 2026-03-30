@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Predict Result - RaceCalc</title>
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        h1 { 
+            text-align: center; 
+            color: #007BFF;
+        }
+
+        .result-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .result-container h2 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+
+        .predicted-time {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .result-details {
+            background: white;
+            color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .result-details p {
+            font-size: 16px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .result-details strong {
+            color: #007BFF;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        a, button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .btn-back {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-new {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .btn-new:hover {
+            background-color: #0056b3;
+        }
+
+        .info-box {
+            background: #f0f0f0;
+            padding: 15px;
+            border-left: 4px solid #007BFF;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .info-box p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🎯 Prediction Result</h1>
+
+{% if result %}
+<div class="result-container">
+    <h2>Your Predicted Time</h2>
+    <div class="predicted-time">{{ result }}</div>
+    <p>Based on your current performance, you can achieve this time!</p>
+</div>
+
+<div class="result-details">
+    <p>
+        <span><strong>📊 Status:</strong></span>
+        <span>✅ Prediction Ready</span>
+    </p>
+</div>
+
+<div class="info-box">
+    <p><strong>💡 Tip:</strong> This prediction is based on the Riegel formula, which estimates race performance based on your previous race times.</p>
+</div>
+
+<div class="button-group">
+    <a href="/ui" class="btn-back">← Back to Calculator</a>
+    <button onclick="window.print()" class="btn-new">🖨️ Print Result</button>
+</div>
+
+{% else %}
+
+<div class="info-box">
+    <p><strong>⚠️ Error:</strong> No prediction result available. Please try again.</p>
+</div>
+
+<a href="/ui" class="btn-back">← Back to Calculator</a>
+
+{% endif %}
+
+</body>
+</html>
