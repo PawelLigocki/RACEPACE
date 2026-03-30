@@ -4,6 +4,10 @@ from app.api import app  # <- Twoja instancja FastAPI
 
 client = TestClient(app)  # działa w pamięci, bez Uvicorn
 
+@pytest.fixture
+def some_safe_data():
+    return {"distance": 5, "time": "00:25:00", "unit": "km"}
+
 def get_page_content(path: str):
     """Zwraca HTML endpointu jako string."""
     response = client.get(path)

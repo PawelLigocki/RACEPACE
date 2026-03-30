@@ -10,6 +10,7 @@ from app.pace import time_to_minutes, minutes_to_time_str
 
 templates = Jinja2Templates(directory="templates")
 
+some_safe_data = {"distance": 5, "time": "00:25:00", "unit": "km"}
 
 app = FastAPI()
 
@@ -43,7 +44,9 @@ async def ui(request: Request):
         "distance_options": ["5", "10", "21", "42"],  # przykład
         "other_data": some_safe_data  # upewnij się, że nie zawiera dict z dict
     }
-    return templates.TemplateResponse("ui.html", context)
+    return templates.TemplateResponse("ui.html", context={"request": request, "distance_options": ["5","10","21","42"], "other_data": some_safe_data})
+
+
 @app.get("/pace-ui")
 def pace_ui(request: Request,
             distance_choice: str,
@@ -56,13 +59,12 @@ def pace_ui(request: Request,
     total_time = time_to_minutes(hours, minutes, seconds)
 
     pace = pace_from_time(distance, total_time)
-
     pace_str = minutes_to_time_str(pace)
 
     return templates.TemplateResponse(
-        "index.html",
-        {"request": request, "result": f"Pace: {pace_str} min/km"}
-)
+        "pace.html",
+        context={"request": request, "result": pace_str}
+    )
 
 @app.get("/predict-ui")
 def predict_ui(request: Request,
@@ -81,12 +83,12 @@ def predict_ui(request: Request,
     result_str = minutes_to_time_str(result)
 
     return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request,
-            "result": f"Predicted time: {result_str}"
-        },
-    )
+    "index.html",
+    context={
+        "request": request,
+        "result": f"Predicted time: {result_str}"
+    },
+)
 
 def resolve_distance(choice, custom):
     if choice == "custom":
