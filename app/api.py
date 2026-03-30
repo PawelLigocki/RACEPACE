@@ -42,8 +42,9 @@ async def ui(request: Request):
     some_safe_data = {"example": 123}  # jeśli potrzebujesz
     
     return templates.TemplateResponse(
+    request,  # ← PIERWSZY ARGUMENT
     "ui.html",
-    {"request": request, "distance_options": ["5","10","21","42"], "other_data": some_safe_data}
+    {"distance_options": ["5","10","21","42"], "other_data": some_safe_data}
 )
 
 @app.get("/pace-ui")
@@ -61,8 +62,9 @@ def pace_ui(request: Request,
     pace_str = minutes_to_time_str(pace)
 
     return templates.TemplateResponse(
+    request,  # ← PIERWSZY ARGUMENT
     "pace.html",
-    {"request": request, "result": pace_str}
+    {"result": pace_str}
 )
 
 @app.get("/predict-ui")
@@ -82,11 +84,9 @@ def predict_ui(request: Request,
     result_str = minutes_to_time_str(result)
 
     return templates.TemplateResponse(
+    request,  # ← PIERWSZY ARGUMENT
     "index.html",
-    {
-        "request": request,
-        "result": f"Predicted time: {result_str}"
-    }
+    {"result": f"Predicted time: {result_str}"}
 )
 
 def resolve_distance(choice, custom):
