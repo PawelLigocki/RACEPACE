@@ -39,13 +39,11 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/ui")
 async def ui(request: Request):
-    context = {
-        "request": request,
-        "distance_options": ["5", "10", "21", "42"],  # przykład
-        "other_data": some_safe_data  # upewnij się, że nie zawiera dict z dict
-    }
-    return templates.TemplateResponse("ui.html", context={"request": request, "distance_options": ["5","10","21","42"], "other_data": some_safe_data})
-
+    some_safe_data = {"example": 123}  # jeśli potrzebujesz
+    return templates.TemplateResponse(
+        name="ui.html",
+        context={"request": request, "distance_options": ["5","10","21","42"], "other_data": some_safe_data}
+    )
 
 @app.get("/pace-ui")
 def pace_ui(request: Request,
