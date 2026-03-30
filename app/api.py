@@ -37,7 +37,7 @@ def predict(distance: float, time: float, target: float):
 
 @app.get("/ui")
 def ui(request: Request):
-    return templates.TemplateResponse(request, "index.html", {})
+    return templates.TemplateResponse("index.html", {"request": request})
 
 from fastapi.responses import JSONResponse, HTMLResponse
 
@@ -58,11 +58,8 @@ def pace_ui(request: Request,
 
     return templates.TemplateResponse(
         "index.html",
-        {
-            "request": request,
-            "result": f"Pace: {pace_str} min/km"
-        },
-    )
+        {"request": request, "result": f"Pace: {pace_str} min/km"}
+)
 
 @app.get("/predict-ui")
 def predict_ui(request: Request,

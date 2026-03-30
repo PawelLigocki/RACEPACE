@@ -5,7 +5,8 @@ import time  # do drobnego opóźnienia
 
 # Funkcja uruchamiająca serwer FastAPI w tle
 def run_server():
-    uvicorn.run("app.main:app", host="127.0.0.1", port=8000)
+    # <- zmieniamy 'app.main:app' na faktyczną lokalizację
+    uvicorn.run("app.api:app", host="127.0.0.1", port=8000, log_level="info")
 
 def test_pace_calculation_e2e():
     # Uruchom serwer w tle
@@ -70,4 +71,3 @@ def test_predict_e2e():
         assert "Predicted" in result_text
 
         browser.close()
-        
